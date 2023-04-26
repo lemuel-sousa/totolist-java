@@ -1,2 +1,2 @@
 # totolist-java
-a simple api To-list made in java
+a simple api to-do list made in java
