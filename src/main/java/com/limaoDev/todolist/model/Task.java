@@ -34,16 +34,16 @@ public class Task {
     @Column( nullable = false)
     private String title;
 
-    @Column( nullable = false)
+    @Column( nullable = true)
     private String description;
 
     @Column( nullable = false)
     private LocalDateTime deadLine;
 
-    @Column( nullable = false)
+    @Column( nullable = true)
     @Enumerated(EnumType.STRING)
-    private TaskStatus status;
-
+    private TaskStatus status = TaskStatus.PENDING;
+    
     @CreationTimestamp
     @Column( name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
