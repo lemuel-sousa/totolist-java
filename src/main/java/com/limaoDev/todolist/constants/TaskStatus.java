@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum TaskStatus {
-    PENDENTE,
-    CONCLUIDO;
+    PENDING,
+    COMPLETED;
 }
