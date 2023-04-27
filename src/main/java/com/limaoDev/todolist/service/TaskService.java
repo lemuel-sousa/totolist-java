@@ -14,43 +14,57 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class TaskService {
-    
+
     private TaskRepository taskRepository;
 
-    //Create new task
-    public Task createTask( Task task){
+    // Create new task
+    public Task createTask(Task task) {
         return taskRepository.save(task);
     }
 
-    //List all tasks
-    public List<Task> listAllTasks(){
+    // List all tasks
+    public List<Task> listAllTasks() {
         return taskRepository.findAll();
     }
 
-    //Find task by id
-    public ResponseEntity<Task> findTaskById(Long id){
+    // Find task by id
+    public ResponseEntity<Task> findTaskById(Long id) {
         return taskRepository.findById(id)
                 .map(task -> ResponseEntity.ok().body(task))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    //List pendings tasks
-    public List<Task> listPendingTasks(){
-        return taskRepository.findByStatus(TaskStatus.PENDENTE);
+    // List pendings tasks
+    public List<Task> listPendingTasks() {
+        return taskRepository.findByStatus(TaskStatus.PENDING);
     }
 
-    //List completeds tasks
-    public List<Task> listCompletedTasks(){
-        return taskRepository.findByStatus(TaskStatus.CONCLUIDO);
+    // List completeds tasks
+    public List<Task> listCompletedTasks() {
+        return taskRepository.findByStatus(TaskStatus.COMPLETED);
     }
 
-    //Toggle task status
+    // Toggle task status by id
+    public ResponseEntity<Task> toggleTaskStatus(Task task, Long id){
+        return taskRepository.findById(id)
+                .map(taskToToggleStatus -> {
+                    if( taskToToggleStatus.getStatus() == TaskStatus.PENDING){
+                        taskToToggleStatus.setStatus(TaskStatus.COMPLETED);
+                    } else if (  taskToToggleStatus.getStatus() == TaskStatus.COMPLETED){
+                        taskToToggleStatus.setStatus(TaskStatus.PENDING);
+                    }
 
-    //Update task by id
-    public ResponseEntity<Task> updateTaskById(Task task, Long id){
+                    Task statusUpdated = taskRepository.save(taskToToggleStatus);
+
+                    return ResponseEntity.ok().body(statusUpdated);
+                }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // Update task by id
+    public ResponseEntity<Task> updateTaskById(Task task, Long id) {
         return taskRepository.findById(id)
                 .map(taskToUpdate -> {
-                    
+
                     taskToUpdate.setTitle(task.getTitle());
                     taskToUpdate.setDescription(task.getDescription());
                     taskToUpdate.setDeadLine(task.getDeadLine());
@@ -62,15 +76,15 @@ public class TaskService {
                 }).orElse(ResponseEntity.notFound().build());
     }
 
-    //Delete task by id
-    public ResponseEntity<Object> deleteTaskById(Long id){
+    // Delete task by id
+    public ResponseEntity<Object> deleteTaskById(Long id) {
         return taskRepository.findById(id)
                 .map(taskToDelete -> {
-                    
+
                     taskRepository.deleteById(id);
 
                     return ResponseEntity.noContent().build();
                 }).orElse(ResponseEntity.notFound().build());
     }
-    
+
 }

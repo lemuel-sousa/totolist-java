@@ -66,6 +66,14 @@ public class TaskController {
         return taskService.listCompletedTasks();
     }
 
+    //Toggle status
+    @PutMapping("/tasks/status/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Task> toggleTaskStatus(@PathVariable( value = "id") Long id, Task task){
+        return taskService.toggleTaskStatus(task, id);
+    }
+
+
     //Update task
     @PutMapping("/tasks/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -74,8 +82,6 @@ public class TaskController {
         return taskService.updateTaskById(task, id);
     }
 
-    //Toggle status
-
     //Delete task
     @DeleteMapping("/tasks/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -83,7 +89,4 @@ public class TaskController {
         log.info("Task with id '{}' deleted", id);
         return taskService.deleteTaskById(id);
     }
-
-    
-
 }
